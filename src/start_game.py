@@ -3,6 +3,7 @@ from pygame.locals import *
 from random import randint
 from src import rb_tree
 from src import get_all
+from math import ceil
 
 import time
 def start():
@@ -28,6 +29,7 @@ def start():
     title_texts.append(myfont.render("Red Black Tree: ", False, (255, 255, 255)))
     title_texts.append(myfont.render("Vetor Ordenado: ", False, (255, 255, 255)))
     insert_text = myfont.render("Insert", False, (0,0,0))
+
 
 
     # criando superfície das cartas
@@ -60,17 +62,36 @@ def start():
                 pygame.quit()
                 exit()
             elif event.type == MOUSEBUTTONDOWN:
-                print(pygame.mouse.get_pos())
-                if pygame.mouse.get_pos()[0] >= 935 and pygame.mouse.get_pos()[1] >= 402:
-                    if pygame.mouse.get_pos()[0] <= 1020 and pygame.mouse.get_pos()[1] <= 600:
-                        while(True):
-                            x = randint(0, 100)
-                            if not x in numbers:
-                                tree.add(x)
+                if pygame.mouse.get_pos()[0] >= 930 and pygame.mouse.get_pos()[1] >= 550:
+                    if pygame.mouse.get_pos()[0] <= 1020 and pygame.mouse.get_pos()[1] <= 610:
+                        if(len(numbers)<=14):
+                            while(True):
+                                x = randint(0, 100)
+                                if not x in numbers:
+                                    tree.add(x)
+                                    break
+                            tree_array.clear()
+                            tree_array= get_all.get_all(tree.root)
+                            numbers.append(x)
+                mouse_position = (pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
+                if(len(numbers)>0):
+                    if mouse_position[0] >= 10 and mouse_position[0] <= 140:
+                        select_sound = pygame.mixer.Sound("snd/button-25.wav")
+                        select_sound.play()
+                        card_selected = ceil(mouse_position[1] / 70) - 1
+                        count_card = 0
+                        found_card = -1
+                        for (posicao_x, posicao_y), valor in dict.items():
+                            if count_card == card_selected:
+                                found_card = valor
                                 break
-                        tree_array.clear()
-                        tree_array= get_all.get_all(tree.root)
-                        numbers.append(x)
+                            count_card+=1
+                        if found_card >= 0:
+                            tree.remove(found_card)
+                            tree_array.clear()
+                            tree_array = get_all.get_all(tree.root)
+                            numbers.remove(found_card)
+
 
 
         screen.fill((150, 65, 200))
@@ -107,7 +128,6 @@ def start():
         if len(tree_array) > 1:
             if len(tree_array) >= 3:
                 heap_children = tree_array[1:3]
-                print(heap_children)
                 if heap_children[1].color == 'RED':
                     show1 = card_skin_red
                 else:
@@ -174,8 +194,7 @@ def start():
                 screen.blit(number_surface, (pos_x + 2, 590))
                 pos_x+=70
         i_sort+=1
-
-        screen.blit(insert_button, (930, 550))
-        screen.blit(insert_text, (942, 567))
+        if(len(numbers) <= 14):
+            screen.blit(insert_button, (930, 550))
+            screen.blit(insert_text, (942, 567))
         pygame.display.update()
-        time.sleep(3)
