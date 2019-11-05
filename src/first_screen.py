@@ -23,13 +23,13 @@ def begin():
     # INSTRUCTIONS
     ins_font = pygame.font.SysFont('bold', 50)
     ins_texts = []
-    ins_texts.append(ins_font.render("Será feita a ordenação de 15 valores", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("por meio do algoritmo Heap Sort", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("É possível visualizar no topo o vetor", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("original criado de forma aleatória,", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("ao centro o Max Heap de cada iteração", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("e logo abaixo o vetor ordenado", False, (255, 255, 255)))
-    ins_texts.append(ins_font.render("adicionando a raiz do Heap a cada passo.", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("Será feita a inserção e remoção de até 15 ", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("valores em uma Red Black Tree.", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("Será inserido o valor informado, ou um", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("aleatório se não for informado valor.", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("Clique sobre a carta na parte superior", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("para removê-la. Serão informados os ", False, (255, 255, 255)))
+    ins_texts.append(ins_font.render("casos de inserção de cada valor.", False, (255, 255, 255)))
 
     while True:
         for event in pygame.event.get():
@@ -43,7 +43,7 @@ def begin():
                         start_game.start()
         pygame.display.update()
         screen.fill((150, 65, 200))
-        text_surface = my_font.render("Heap Sort", False, (255, 255, 255))
+        text_surface = my_font.render("Red Black Tree", False, (255, 255, 255))
         start_text_surface = start_font.render("START", False, (255, 0, 0))
         screen.blit(text_surface, (80,10))
         screen.blit(start_button_skin, (599, 390))

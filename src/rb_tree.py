@@ -7,6 +7,7 @@ BLACK = 'BLACK'
 RED = 'RED'
 NIL = 'NIL'
 
+CASOS = []
 
 class Node:
     def __init__(self, value, color, parent, left=None, right=None):
@@ -71,6 +72,7 @@ class RedBlackTree:
         if not self.root:
             self.root = Node(value, color=BLACK, parent=None, left=self.NIL_LEAF, right=self.NIL_LEAF)
             self.count += 1
+            CASOS.append("Caso 1: Inserção é a raiz. Pinta de preto.")
             return
         parent, node_dir = self._find_parent(value)
         if node_dir is None:
@@ -371,32 +373,54 @@ class RedBlackTree:
         Given a red child node, determine if there is a need to rebalance (if the parent is red)
         If there is, rebalance it
         """
+
         parent = node.parent
         value = node.value
+
         if (parent is None  # what the fuck? (should not happen)
            or parent.parent is None  # parent is the root
            or (node.color != RED or parent.color != RED)):  # no need to rebalance
+            if parent:
+                if parent.color == BLACK:
+                    CASOS.append("Caso 2: Pai preto e filho inserido vermelho. Nada a fazer.")
             return
+
         grandfather = parent.parent
         node_dir = 'L' if parent.value > value else 'R'
         parent_dir = 'L' if grandfather.value > parent.value else 'R'
         uncle = grandfather.right if parent_dir == 'L' else grandfather.left
         general_direction = node_dir + parent_dir
 
+        if parent and uncle:
+            if parent.color == RED and uncle.color == RED:
+                CASOS.append("Caso 3: Pai e tio são vermelhos. Inverte a cor do pai e tio.")
+
         if uncle == self.NIL_LEAF or uncle.color == BLACK:
             # rotate
             if general_direction == 'LL':
                 self._right_rotation(node, parent, grandfather, to_recolor=True)
+                CASOS.append("Caso 5: Pai é um filho vermelho a esquerda, filho a esquerda, tio é preto.")
+                CASOS.append("Rotação para a direita a partir do " + str(grandfather.value))
             elif general_direction == 'RR':
                 self._left_rotation(node, parent, grandfather, to_recolor=True)
+                CASOS.append("Caso 5: Pai é um filho vermelho a direita, filho a direita, tio é preto")
+                CASOS.append("Rotação para a esquerda a partir do " + str(grandfather.value))
             elif general_direction == 'LR':
                 self._right_rotation(node=None, parent=node, grandfather=parent)
+                CASOS.append("Caso 4: Pai é um filho vermelho a esquerda, filho a direita, tio é preto.")
+                CASOS.append("Rotação a direita a partir do " + str(parent.value))
                 # due to the prev rotation, our node is now the parent
                 self._left_rotation(node=parent, parent=node, grandfather=grandfather, to_recolor=True)
+                CASOS.append("Caso 5: Pai é um filho vermelho a direita, filho a direita, tio é preto")
+                CASOS.append("Rotação para a esquerda a partir do " + str(grandfather.value))
             elif general_direction == 'RL':
                 self._left_rotation(node=None, parent=node, grandfather=parent)
+                CASOS.append("Caso 4: Pai é um filho vermelho a direita, filho a esquerda, tio é preto.")
+                CASOS.append("Rotação a esquerda a partir do " + str(parent.value))
                 # due to the prev rotation, our node is now the parent
                 self._right_rotation(node=parent, parent=node, grandfather=grandfather, to_recolor=True)
+                CASOS.append("Caso 5: Pai é um filho vermelho a esquerda, filho a esquerda, tio é preto.")
+                CASOS.append("Rotação para a direita a partir do " + str(grandfather.value))
             else:
                 raise Exception("{} is not a valid direction!".format(general_direction))
         else:  # uncle is RED

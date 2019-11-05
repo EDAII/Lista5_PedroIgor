@@ -4,6 +4,7 @@ from random import randint
 from src import rb_tree
 from src import get_all
 from math import ceil
+import copy
 
 import time
 def start():
@@ -27,8 +28,9 @@ def start():
     title_texts = []
     title_texts.append(myfont.render("Valores inseridos: ", False, (255,255,255)))
     title_texts.append(myfont.render("Red Black Tree: ", False, (255, 255, 255)))
-    title_texts.append(myfont.render("Vetor Ordenado: ", False, (255, 255, 255)))
+    title_texts.append(myfont.render("Casos: ", False, (255, 255, 255)))
     insert_text = myfont.render("Insert", False, (0,0,0))
+    cases_text = []
 
 
 
@@ -54,25 +56,58 @@ def start():
     nil = rb_tree.Node(None, 'NIL', None)
     tree_array= get_all.get_all(tree.root)
 
-
+    input_box = pygame.Rect(875, 565, 140, 32)
+    color_inactive = pygame.Color('lightskyblue3')
+    color_active = pygame.Color('dodgerblue2')
+    color = color_inactive
+    active = False
+    text = ''
 
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 exit()
+            elif event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        print(text)
+                        text = ''
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
             elif event.type == MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pos()[0] >= 930 and pygame.mouse.get_pos()[1] >= 550:
                     if pygame.mouse.get_pos()[0] <= 1020 and pygame.mouse.get_pos()[1] <= 610:
-                        if(len(numbers)<=14):
-                            while(True):
-                                x = randint(0, 100)
-                                if not x in numbers:
-                                    tree.add(x)
-                                    break
-                            tree_array.clear()
-                            tree_array= get_all.get_all(tree.root)
-                            numbers.append(x)
+                        rb_tree.CASOS.clear()
+                        cases_text.clear()
+                        if len(numbers)<=14:
+                            try:
+                                n = int(text)
+                                if type(n) == int:
+                                    if(int(text) not in numbers):
+                                        tree.add(int(text))
+                                        tree_array.clear()
+                                        tree_array = get_all.get_all(tree.root)
+                                        numbers.append(int(text))
+                                        text = ''
+                                        for c in rb_tree.CASOS:
+                                            cases_text.append(myfont.render(c, False, (0, 0, 0)))
+                            except Exception as e:
+                                if text == '':
+                                    while (True):
+                                        x = randint(0, 100)
+                                        if not x in numbers:
+                                            tree.add(x)
+                                            break
+                                    tree_array.clear()
+                                    tree_array = get_all.get_all(tree.root)
+                                    numbers.append(x)
+                                    for c in rb_tree.CASOS:
+                                        cases_text.append(myfont.render(c, False, (0, 0, 0)))
+                            text = ''
+
                 mouse_position = (pygame.mouse.get_pos()[1], pygame.mouse.get_pos()[0])
                 if(len(numbers)>0):
                     if mouse_position[0] >= 10 and mouse_position[0] <= 140:
@@ -91,6 +126,15 @@ def start():
                             tree_array.clear()
                             tree_array = get_all.get_all(tree.root)
                             numbers.remove(found_card)
+                            cases_text.clear()
+
+                if input_box.collidepoint(event.pos):
+                    # Toggle the active variable.
+                    active = not active
+                else:
+                    active = False
+                    # Change the current color of the input box.
+                color = color_active if active else color_inactive
 
 
 
@@ -98,9 +142,14 @@ def start():
         screen.blit(title_texts[0], (10, 10))
         screen.blit(title_texts[1], (10, 150))
         screen.blit(title_texts[2], (10, 523))
+        pos_j = 543
+        for c in cases_text:
+            screen.blit(c, (10, pos_j))
+            pos_j += 20
+
         i = 0
         while i < len(numbers):
-            dict[card_pos[i]] = numbers[i]
+            dict[card_pos[i]] = copy.copy(numbers[i])
             show = card_skin_black
             screen.blit(show, card_pos[i])
 
@@ -197,4 +246,19 @@ def start():
         if(len(numbers) <= 14):
             screen.blit(insert_button, (930, 550))
             screen.blit(insert_text, (942, 567))
+
+
+
+        txt_surface = myfont.render(text, True, color)
+        # Resize the box if the text is too long.
+        width = max(50, txt_surface.get_width() + 10)
+        input_box.w = width
+        # Blit the text.
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        # Blit the input_box rect.
+        pygame.draw.rect(screen, color, input_box, 2)
+
+        pygame.display.flip()
+
+
         pygame.display.update()
