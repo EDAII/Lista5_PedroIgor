@@ -1,0 +1,21 @@
+text
+15
+['Caso 1: Inserção é a raiz. Pinta de preto.']
+text
+10
+['Caso 2: Pai preto e filho inserido vermelho.']
+text
+20
+['Caso 2: Pai preto e filho inserido vermelho.']
+text
+19
+['Caso 3: Pai e tio são vermelhos.']
+text
+17
+['Caso 5: Rotação a direita a partir do 20']
+text
+18
+['Caso 3: Pai e tio são vermelhos.', 'Caso 2: Pai preto e filho inserido vermelho.']
+text
+22
+['Caso 2: Pai preto e filho inserido vermelho.']
