@@ -5,8 +5,6 @@ from src import rb_tree
 from src import get_all
 from math import ceil
 import copy
-
-import time
 def start():
     pygame.init()
 
@@ -90,6 +88,7 @@ def start():
                                         tree.add(int(text))
                                         tree_array.clear()
                                         tree_array = get_all.get_all(tree.root)
+                                        #get_all.teste(tree.root)
                                         numbers.append(int(text))
                                         text = ''
                                         for c in rb_tree.CASOS:
@@ -103,6 +102,7 @@ def start():
                                             break
                                     tree_array.clear()
                                     tree_array = get_all.get_all(tree.root)
+                                    #get_all.teste(tree.root)
                                     numbers.append(x)
                                     for c in rb_tree.CASOS:
                                         cases_text.append(myfont.render(c, False, (0, 0, 0)))
@@ -122,11 +122,14 @@ def start():
                                 break
                             count_card+=1
                         if found_card >= 0:
+                            rb_tree.CASOS.clear()
                             tree.remove(found_card)
+                            cases_text.clear()
+                            for c in rb_tree.CASOS:
+                                cases_text.append(myfont.render(c, False, (0, 0, 0)))
                             tree_array.clear()
                             tree_array = get_all.get_all(tree.root)
                             numbers.remove(found_card)
-                            cases_text.clear()
 
                 if input_box.collidepoint(event.pos):
                     # Toggle the active variable.

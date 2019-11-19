@@ -171,6 +171,7 @@ class RedBlackTree:
         right_child = node.right
         not_nil_child = left_child if left_child != self.NIL_LEAF else right_child
         if node == self.root:
+            CASOS.append("Caso 1: Remoção é a raiz. Remove e substitui pelo subsequente.")
             if not_nil_child != self.NIL_LEAF:
                 # if we're removing the root and it has one valid child, simply make that child the root
                 self.root = not_nil_child
@@ -180,6 +181,7 @@ class RedBlackTree:
                 self.root = None
         elif node.color == RED:
             if not node.has_children():
+                CASOS.append("Caso Trivial: Remove e substitui pelo subsequente alterando a cor.")
                 # Red node with no children, the simplest remove
                 self._remove_leaf(node)
             else:
@@ -190,6 +192,7 @@ class RedBlackTree:
                 """
                 raise Exception('Unexpected behavior')
         else:  # node is black!
+            CASOS.append("Caso Trivial: Remove e substitui pelo subsequente alterando a cor.")
             if right_child.has_children() or left_child.has_children():  # sanity check
                 raise Exception('The red child of a black node with 0 or 1 children'
                                 ' cannot have children, otherwise the black height of the tree becomes invalid! ')
@@ -231,6 +234,7 @@ class RedBlackTree:
           9B         20B            9B        20B
         """
         if self.root == node:
+            CASOS.append("Caso 1: Remoção da Raiz.")
             node.color = BLACK
             return
         self.__case_2(node)
@@ -254,6 +258,11 @@ class RedBlackTree:
         parent = node.parent
         sibling, direction = self._get_sibling(node)
         if sibling.color == RED and parent.color == BLACK and sibling.left.color != RED and sibling.right.color != RED:
+            CASOS.append("Caso 2: Irmão vermelho com filhos pretos.")
+            if direction == 'L':
+                CASOS.append("Remove e rotaciona para o lado direito em "+str(sibling.value))
+            else:
+                CASOS.append("Remove e rotaciona para o lado esquerdo em " + str(sibling.value))
             self.ROTATIONS[direction](node=None, parent=sibling, grandfather=parent)
             parent.color = RED
             sibling.color = BLACK
@@ -281,6 +290,7 @@ class RedBlackTree:
         sibling, _ = self._get_sibling(node)
         if (sibling.color == BLACK and parent.color == BLACK
            and sibling.left.color != RED and sibling.right.color != RED):
+            CASOS.append("Caso 3: Pai preto, irmão preto, sobrinhos pretos.")
             # color the sibling red and forward the double black node upwards
             # (call the cases again for the parent)
             sibling.color = RED
@@ -303,6 +313,7 @@ class RedBlackTree:
         if parent.color == RED:
             sibling, direction = self._get_sibling(node)
             if sibling.color == BLACK and sibling.left.color != RED and sibling.right.color != RED:
+                CASOS.append("Caso 4: Pai vermelho, irmão preto.Remove e troca a cor do "+str(parent.value)+" e do "+str(sibling.value))
                 parent.color, sibling.color = sibling.color, parent.color  # switch colors
                 return  # Terminating
         self.__case_5(node)
@@ -325,8 +336,13 @@ class RedBlackTree:
         outer_node = sibling.left if direction == 'L' else sibling.right
         if closer_node.color == RED and outer_node.color != RED and sibling.color == BLACK:
             if direction == 'L':
+                CASOS.append("Caso 5: Pai preto, irmão preto, sobrinho interno vermelho.")
+                CASOS.append("Rotação para a direita em "+str(sibling.right.value))
+
                 self._left_rotation(node=None, parent=closer_node, grandfather=sibling)
             else:
+                CASOS.append("Caso 5: Pai preto, irmão preto, sobrinho interno vermelho.")
+                CASOS.append("Rotação para a esquerda em " + str(sibling.left.value))
                 self._right_rotation(node=None, parent=closer_node, grandfather=sibling)
             closer_node.color = BLACK
             sibling.color = RED
@@ -334,6 +350,7 @@ class RedBlackTree:
         self.__case_6(node)
 
     def __case_6(self, node):
+        CASOS.append("Case 6: Pai preto, irmão preto, sobrinho externo vermelho.")
         """
         Case 6 requires
             SIBLING to be BLACK
@@ -354,6 +371,10 @@ class RedBlackTree:
         """
         sibling, direction = self._get_sibling(node)
         outer_node = sibling.left if direction == 'L' else sibling.right
+        if direction == 'L':
+            CASOS.append("Remove e rotaciona para o lado direito em "+str(sibling.value))
+        else:
+            CASOS.append("Remove e rotaciona para o lado esquerdo em "+str(sibling.value))
 
         def __case_6_rotation(direction):
             parent_color = sibling.parent.color

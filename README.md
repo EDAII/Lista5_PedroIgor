@@ -1,5 +1,6 @@
 # Demo: Insertions in Red Black Tree
-Será feita a demonstração visual de inserção e remoção de elementos em uma árvore vermelho e preto. Para cada inserção é mostrado os casos e uma explicação de quando este caso deve ser aplicado. Se informado um valor na caixa de texto este valor é inserido, caso não seja informado é escolhido um valor aleatório.
+Será feita a demonstração visual de inserção e remoção de elementos em uma árvore vermelho e preto. Para cada inserção e remoção é mostrado os casos e uma explicação de quando este caso deve ser aplicado. Se informado um valor na caixa de texto este valor é inserido, caso não seja informado é escolhido um valor aleatório.
+A implementação foi baseada na implementação do @stanislavkozlovski (thanks a lot) e pode ser encontrada aqui: [Red-Black-Tree](https://github.com/stanislavkozlovski/Red-Black-Tree)
 # Como executar:
 É necessário ter o python3 e o pygame instalados. É fortemente recomendada a utilização de um ambiente virtual para executar o jogo evitando bugs tanto na execução quanto nos arquivos do computador. Para instalar o pygame é necessário o pip3. E dar o seguinte comando:
 ```
